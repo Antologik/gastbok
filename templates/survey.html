@@ -1,0 +1,13 @@
+{%extends 'base.html'%}
+{%block content%}
+<h1>Gästbok: Lämmna ett medelande!</h1>
+<form method="post" action="/survey" enctype="multipart/form-data">
+	 {{ form.csrf_token }}
+	 <p>{{ form.name.label }} {{ form.name() }}</p>
+	 <p>{{ form.email.label }} {{ form.email() }}</p>
+	 <p>{{ form.is_cool.label }} {{ form.is_cool() }}</p>
+	 <p>{{ form.phonenumber.label }} {{ form.phonenumber() }}</p>
+	 <p>{{ form.message.label }} {{ form.message() }}</p>
+	 <p><input type="submit" value="Submit"></p>
+</form>
+{%endblock%}

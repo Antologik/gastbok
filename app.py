@@ -1,6 +1,7 @@
 import os
 import json
-from flask import Flask, render_template, request
+from datetime import datetime
+from flask import Flask, render_template, request, render_template_string
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms import StringField, PasswordField, BooleanField
@@ -8,7 +9,9 @@ from wtforms import DecimalField, RadioField, SelectField, TextAreaField, FileFi
 from wtforms.validators import InputRequired
 from werkzeug.security import generate_password_hash
 
-DATABASE = 'results.json'
+APPEND_FILE = 'results.json'
+
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secretkey'
@@ -34,13 +37,14 @@ def survey():
             phonenumber = form.phonenumber.data
             message = form.message.data
 
-            return (
-               f'Namn: {name} <br>'
-               f'Epost: {email} <br>'
-               f'Är cool?: {is_cool} <br>'
-               f'Telefonnummer: {phonenumber} <br>'
-               f'Message: {message} <br>'
-            )
+            with open(APPEND_FILE, 'a', encoding='utf-8') as f:
+                f.write(f'{datetime.now()},{name}, {email}, {is_cool}, {phonenumber}, {message} \n')
+
+            with open(APPEND_FILE, 'r', encoding='utf-8') as f:
+                content = f.read()
+
+
+            return (render_template('form-complete.html'))
         return render_template('survey.html', form=form)
 
 @app.route('/results')

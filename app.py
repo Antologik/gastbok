@@ -12,7 +12,6 @@ from werkzeug.security import generate_password_hash
 APPEND_FILE = 'results.json'
 
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secretkey'
 
@@ -37,8 +36,21 @@ def survey():
             phonenumber = form.phonenumber.data
             message = form.message.data
 
-            with open(APPEND_FILE, 'a', encoding='utf-8') as f:
-                f.write(f'{datetime.now()},{name}, {email}, {is_cool}, {phonenumber}, {message} \n')
+            with open(APPEND_FILE, 'r') as file:
+                json_contents = json.load(file)
+
+            with open(APPEND_FILE, 'w', encoding='utf-8') as file:
+                print(json_contents)
+                is_cool = str(is_cool).lower()
+                str_response = f'{{"Date": "{datetime.now()}", "Name": "{name}", "Email": "{email}", "Is cool": {is_cool}, "Phonenumber": {phonenumber}, "Message": "{message}"}}'
+                print(str(str_response))
+                print(str_response)
+                # str_response = '{"name": "Sigma", "age": 1}'
+                dict_response = json.loads(str(str_response))
+                json_contents.get("respondents").append(dict_response)
+                print(json_contents)
+                print(str(json_contents))
+                file.write(str(json_contents))
 
             with open(APPEND_FILE, 'r', encoding='utf-8') as f:
                 content = f.read()

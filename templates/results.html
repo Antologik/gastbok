@@ -1,4 +1,16 @@
 {%extends 'base.html'%}
 {%block content%}
-<p>Results</p>
+<h1>Svar:</h1>
+<ul>
+	 {% for i in respondents %}
+	 <li>
+		  <hr>
+		  <strong>Namn:</strong> {{ i.Name }}<br>
+		  <strong>Epost:</strong> {{ i.Email }}<br>
+		  <strong>Is cool</strong> = {{ i.IsCool }}<br>
+		  <strong>Telefonnummer:</strong> {{ i.Phonenumber }}<br><br>
+		  <strong>Medelande:</strong> <br><p>{{ i.Message }}</p>
+	 </li>
+	 {% endfor %}
+</ul>
 {%endblock%}

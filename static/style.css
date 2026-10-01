@@ -1,0 +1,16 @@
+header{
+    background-color: rgb(240, 240, 240);
+    position: sticky;
+    top: 0;
+    font-size: large;
+}
+
+footer{
+    background-color: rgb(240, 240, 240);
+    position: sticky;
+    bottom: 0;
+}
+
+li {
+    list-style-type: none;
+}

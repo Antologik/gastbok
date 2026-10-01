@@ -11,6 +11,12 @@ from werkzeug.security import generate_password_hash
 
 APPEND_FILE = 'results.json'
 
+if not os.path.exists(APPEND_FILE):
+    with open(APPEND_FILE, 'w') as file:
+        file.write('{"respondents": []}')
+else:
+    print(f'The file {APPEND_FILE} already exists.')
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secretkey'
@@ -40,17 +46,11 @@ def survey():
                 json_contents = json.load(file)
 
             with open(APPEND_FILE, 'w', encoding='utf-8') as file:
-                print(json_contents)
                 is_cool = str(is_cool).lower()
-                str_response = f'{{"Date": "{datetime.now()}", "Name": "{name}", "Email": "{email}", "Is cool": {is_cool}, "Phonenumber": {phonenumber}, "Message": "{message}"}}'
-                print(str(str_response))
-                print(str_response)
-                # str_response = '{"name": "Sigma", "age": 1}'
+                str_response = f'{{"Date": "{datetime.now()}", "Name": "{name}", "Email": "{email}", "IsCool": {is_cool}, "Phonenumber": {phonenumber}, "Message": "{message}"}}'
                 dict_response = json.loads(str(str_response))
                 json_contents.get("respondents").append(dict_response)
-                print(json_contents)
-                print(str(json_contents))
-                file.write(str(json_contents))
+                json.dump(json_contents, file)
 
             with open(APPEND_FILE, 'r', encoding='utf-8') as f:
                 content = f.read()
@@ -59,9 +59,11 @@ def survey():
             return (render_template('form-complete.html'))
         return render_template('survey.html', form=form)
 
-@app.route('/results')
+@app.route('/results', methods=['GET'])
 def results():
-    return render_template('results.html')
+    with open(APPEND_FILE, 'r') as file:
+        json_contents = json.load(file)
+    return render_template('results.html', respondents=json_contents.get("respondents"))
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
